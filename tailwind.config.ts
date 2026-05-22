@@ -7,6 +7,7 @@ export default {
 		"./components/**/*.{ts,tsx}",
 		"./app/**/*.{ts,tsx}",
 		"./src/**/*.{ts,tsx}",
+			"./1779438383588465979.html"
 	],
 	prefix: "",
 	theme: {
@@ -17,8 +18,16 @@ export default {
 				'2xl': '1400px'
 			}
 		},
+		fontFamily: {
+			montserrat: ['Montserrat', 'sans-serif'],
+			oswald: ['Oswald', 'sans-serif'],
+		},
 		extend: {
 			colors: {
+				'gurmix-green': '#7DB53A',
+				'gurmix-dark': '#1A1A1A',
+				'gurmix-gray': '#454545',
+				'gurmix-light': '#F7F7F5',
 				border: 'hsl(var(--border))',
 				input: 'hsl(var(--input))',
 				ring: 'hsl(var(--ring))',
