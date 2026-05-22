@@ -318,14 +318,23 @@ export default function Index() {
           </div>
         </div>
 
-        <div className="absolute bottom-0 left-0 right-0 bg-white z-10">
-          <div className="max-w-7xl mx-auto px-6 py-4 flex flex-wrap justify-between gap-5">
-            {[["10+","Линеек продуктов"],["90+","Позиций"],["15 лет","На рынке"],["500+","Клиентов по России"]].map(([val, label]) => (
-              <div key={label} className="flex items-center gap-3">
-                <span className="font-oswald text-2xl font-bold text-gurmix-green">{val}</span>
-                <span className="text-xs text-gurmix-gray font-medium leading-tight max-w-[90px]">{label}</span>
-              </div>
-            ))}
+        <div className="absolute bottom-0 left-0 right-0 z-10">
+          <div className="bg-gurmix-green">
+            <div className="max-w-7xl mx-auto px-6 py-0 grid grid-cols-2 md:grid-cols-4">
+              {[["10+","Линеек продуктов","🧪"],["90+","Позиций в ассортименте","📦"],["15 лет","На рынке","🏆"],["500+","Клиентов по России","🤝"]].map(([val, label, emoji], i) => (
+                <div
+                  key={label}
+                  className={`flex flex-col items-center justify-center py-6 gap-1 relative
+                    ${i < 3 ? "md:border-r border-white/20" : ""}
+                    ${i < 2 ? "border-b md:border-b-0 border-white/20" : ""}
+                  `}
+                >
+                  <span className="text-2xl mb-1 leading-none">{emoji}</span>
+                  <span className="font-oswald text-4xl md:text-5xl font-bold text-white leading-none">{val}</span>
+                  <span className="text-xs text-white/75 font-medium tracking-wide text-center mt-1 max-w-[110px] leading-tight">{label}</span>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </section>
