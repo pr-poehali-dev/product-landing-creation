@@ -199,12 +199,15 @@ export default function Index() {
       {/* ── HEADER ── */}
       <header className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-gray-100">
         <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-          <button onClick={() => scrollTo("hero")}>
-            <img
-              src="https://cdn.poehali.dev/projects/8b724216-7c50-4a02-97ca-5acd31a5a5d0/bucket/d38dc31d-3943-4ec3-be2c-aac25c01f288.png"
-              alt="ГУРМИКС"
-              className="h-10 w-auto object-contain"
-            />
+          <button onClick={() => scrollTo("hero")} className="flex items-center gap-3">
+            <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-8 h-8">
+              <polygon points="16,2 30,28 2,28" fill="#7DB53A" opacity="0.15"/>
+              <polygon points="16,6 28,26 4,26" fill="#7DB53A" opacity="0.4"/>
+              <polygon points="16,10 26,24 6,24" fill="#7DB53A"/>
+            </svg>
+            <span className="font-oswald text-xl font-bold tracking-wider text-gurmix-dark">
+              ГУРМИКС<sup className="text-[10px] font-montserrat font-normal ml-0.5">®</sup>
+            </span>
           </button>
 
           <nav className="hidden md:flex items-center gap-8">
@@ -440,12 +443,15 @@ export default function Index() {
       {/* ── FOOTER ── */}
       <footer className="bg-gurmix-dark py-8">
         <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-4">
-          <div>
-            <img
-              src="https://cdn.poehali.dev/projects/8b724216-7c50-4a02-97ca-5acd31a5a5d0/bucket/d38dc31d-3943-4ec3-be2c-aac25c01f288.png"
-              alt="ГУРМИКС"
-              className="h-8 w-auto object-contain brightness-0 invert opacity-70"
-            />
+          <div className="flex items-center gap-3">
+            <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-6 h-6">
+              <polygon points="16,2 30,28 2,28" fill="#7DB53A" opacity="0.3"/>
+              <polygon points="16,6 28,26 4,26" fill="#7DB53A" opacity="0.6"/>
+              <polygon points="16,10 26,24 6,24" fill="#7DB53A"/>
+            </svg>
+            <span className="font-oswald text-white tracking-widest text-sm">
+              ГУРМИКС<sup className="text-[9px] font-montserrat font-normal">®</sup>
+            </span>
           </div>
           <p className="text-white/40 text-xs text-center">© 2024 ООО «ГУРМИКС». Все права защищены.</p>
           <button className="text-white/40 text-xs hover:text-white/70 transition-colors">
