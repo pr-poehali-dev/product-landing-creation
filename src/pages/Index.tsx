@@ -1,51 +1,102 @@
 import { useState, useEffect, useRef } from "react";
 import Icon from "@/components/ui/icon";
 
-const CATEGORIES = [
+/* ─────────────── DATA ─────────────── */
+
+const CATALOG: {
+  id: string;
+  title: string;
+  desc?: string;
+  img: string;
+  products: string[];
+  accent?: boolean;
+}[] = [
   {
+    id: "marinades",
     title: "Маринады",
-    desc: "Готовые решения для мяса, птицы и рыбы",
-    img: "https://cdn.poehali.dev/projects/8b724216-7c50-4a02-97ca-5acd31a5a5d0/files/f613acc1-03c0-4cd5-9d3b-b1953643fdd3.jpg",
-    count: "24 продукта",
-    tag: "ХИТ",
+    img: "https://cdn.poehali.dev/projects/8b724216-7c50-4a02-97ca-5acd31a5a5d0/files/2f5edc72-9bc7-409c-b7ff-3262703cc264.jpg",
+    products: ["Маринад Люкс", "Маринад Универсал", "Маринад Экспресс"],
   },
   {
-    title: "Специи и смеси",
-    desc: "Профессиональные смеси для кухни и производства",
-    img: "https://cdn.poehali.dev/projects/8b724216-7c50-4a02-97ca-5acd31a5a5d0/files/25e9c164-90a1-43ed-8698-aa5bf3af8c66.jpg",
-    count: "38 продуктов",
-    tag: "",
+    id: "korean",
+    title: "Корейские заправки",
+    img: "https://cdn.poehali.dev/projects/8b724216-7c50-4a02-97ca-5acd31a5a5d0/files/0e203b1d-2a2d-4743-92b4-2636485e75a1.jpg",
+    products: [
+      "Корейская заправка для моркови",
+      "Корейская заправка для спаржи",
+      "Корейская заправка для фунчозы",
+      "Корейская заправка для хе",
+    ],
   },
   {
-    title: "Соусы и заправки",
-    desc: "Готовые соусы для ресторанов и розницы",
-    img: "https://cdn.poehali.dev/projects/8b724216-7c50-4a02-97ca-5acd31a5a5d0/files/95878497-bc2d-4231-8908-517fd2d338a0.jpg",
-    count: "19 продуктов",
-    tag: "НОВИНКА",
+    id: "sauces",
+    title: "Соусы",
+    img: "https://cdn.poehali.dev/projects/8b724216-7c50-4a02-97ca-5acd31a5a5d0/files/e6a870ad-2e50-48ba-ae6b-407fa6fe64c7.jpg",
+    products: ["Европейские", "FoodService", "Азиатские"],
   },
   {
-    title: "Мясные решения",
-    desc: "Полный цикл подготовки мяса для HoReCa",
-    img: "https://cdn.poehali.dev/projects/8b724216-7c50-4a02-97ca-5acd31a5a5d0/files/4c6eefa9-0b5c-4fbe-b628-ae37f2603bb7.jpg",
-    count: "12 продуктов",
-    tag: "",
+    id: "grill",
+    title: "Гриль-приправы",
+    desc: "Тщательно разработанные композиции специй, трав и пряностей, созданные, чтобы преобразить вкус и подготовить продукт перед дальнейшей тепловой обработкой.",
+    img: "https://cdn.poehali.dev/projects/8b724216-7c50-4a02-97ca-5acd31a5a5d0/files/84a860e5-7779-47e9-b6c5-13ee2190b55c.jpg",
+    products: [
+      "Гриль-приправа Грузинская",
+      "Гриль-приправа для курицы",
+      "Гриль-приправа Классическая",
+    ],
+    accent: true,
+  },
+  {
+    id: "smoke",
+    title: "Коптильные ароматизаторы",
+    img: "https://cdn.poehali.dev/projects/8b724216-7c50-4a02-97ca-5acd31a5a5d0/files/4e935373-b16f-4ce0-8007-0ca93cd3b3c3.jpg",
+    products: [
+      "Ароматизатор коптильный Гурмикс",
+      "Ароматизатор коптильный Деликарома",
+    ],
+  },
+  {
+    id: "soups",
+    title: "Основы для супов",
+    desc: "Кулинарные решения для быстрого приготовления популярных супов азиатской кухни. Комплексные смеси ингредиентов со сбалансированным набором аутентичных специй.",
+    img: "https://cdn.poehali.dev/projects/8b724216-7c50-4a02-97ca-5acd31a5a5d0/files/ebec5ad9-de64-4586-bcce-fe7f4a6a9172.jpg",
+    products: [
+      "Основа для супа Рамен мисо",
+      "Основа для супа Том Кха",
+      "Основа для супа Том Ям",
+      "Основа для супа Фо Бо",
+    ],
+    accent: true,
+  },
+  {
+    id: "broths",
+    title: "Бульоны",
+    desc: "Концентрированные экстракты из говядины и курицы. Сохраняют богатый, естественный вкус домашнего бульона. Небольшое количество продукта мгновенно превращается в ароматный бульон для супов, соусов и ризотто.",
+    img: "https://cdn.poehali.dev/projects/8b724216-7c50-4a02-97ca-5acd31a5a5d0/files/5cb9232d-de9a-4745-86d6-a1fdcd8a718d.jpg",
+    products: ["Бульон говяжий", "Бульон куриный"],
+  },
+  {
+    id: "breading",
+    title: "Панировочные смеси",
+    img: "https://cdn.poehali.dev/projects/8b724216-7c50-4a02-97ca-5acd31a5a5d0/files/a179238b-467e-4fcf-a847-c92dfb1468eb.jpg",
+    products: ["Панировка Нежная", "Панировка Острая", "Панировка Оригинальная"],
+  },
+  {
+    id: "concentrates",
+    title: "Концентраты и пунши",
+    img: "https://cdn.poehali.dev/projects/8b724216-7c50-4a02-97ca-5acd31a5a5d0/files/529faba3-51a3-4411-b084-51ce004eae2f.jpg",
+    products: [],
   },
 ];
 
-const ADVANTAGES = [
-  { icon: "Factory", title: "Собственное производство", desc: "Полный контроль качества от сырья до готового продукта" },
-  { icon: "Truck", title: "Доставка по всей России", desc: "Отгрузка от 1 дня, работаем с транспортными компаниями" },
-  { icon: "ShieldCheck", title: "Сертифицированная продукция", desc: "Все продукты имеют необходимые сертификаты и декларации" },
-  { icon: "Headphones", title: "Персональный менеджер", desc: "Индивидуальный подход и поддержка на всех этапах" },
+const NAV_ITEMS = [
+  { id: "catalog", label: "Каталог" },
+  { id: "price", label: "Прайс" },
+  { id: "contacts", label: "Контакты" },
 ];
 
-const DISCOUNTS = [
-  { range: "от 50 кг", discount: "5%", dark: false },
-  { range: "от 200 кг", discount: "10%", dark: false },
-  { range: "от 500 кг", discount: "15%", dark: true },
-];
-
-function useInView(threshold = 0.15) {
+/* ─────────────── HOOK ─────────────── */
+function useInView(threshold = 0.12) {
   const ref = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
   useEffect(() => {
@@ -59,16 +110,87 @@ function useInView(threshold = 0.15) {
   return { ref, visible };
 }
 
+/* ─────────────── CATALOG SECTION ─────────────── */
+function CatalogSection({ cat, index }: { cat: typeof CATALOG[0]; index: number }) {
+  const { ref, visible } = useInView();
+  const isEven = index % 2 === 0;
+  const bgClass = cat.accent
+    ? "bg-gurmix-dark"
+    : index % 2 === 0
+    ? "bg-white"
+    : "bg-gurmix-light";
+
+  return (
+    <div id={cat.id} ref={ref} className={`py-16 md:py-20 ${bgClass}`}>
+      <div className="max-w-7xl mx-auto px-6">
+        <div className={`flex flex-col ${isEven ? "lg:flex-row" : "lg:flex-row-reverse"} gap-12 items-center`}>
+
+          {/* Image */}
+          <div className={`w-full lg:w-5/12 transition-all duration-700 ${visible ? "opacity-100 translate-x-0" : isEven ? "opacity-0 -translate-x-10" : "opacity-0 translate-x-10"}`}>
+            <div className="relative overflow-hidden aspect-[4/3]">
+              <img src={cat.img} alt={cat.title} className="w-full h-full object-cover" />
+              <div className="absolute top-4 left-4 w-12 h-12 bg-gurmix-green flex items-center justify-center">
+                <span className="font-oswald text-white text-lg font-bold">{String(index + 1).padStart(2, "0")}</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Content */}
+          <div className={`w-full lg:w-7/12 transition-all duration-700 delay-200 ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`}>
+            <h2 className={`font-oswald text-4xl md:text-5xl font-bold mb-5 ${cat.accent ? "text-white" : "text-gurmix-dark"}`}>
+              {cat.title}
+            </h2>
+
+            {cat.desc && (
+              <p className={`text-base leading-relaxed mb-8 max-w-xl ${cat.accent ? "text-white/70" : "text-gurmix-gray"}`}>
+                {cat.desc}
+              </p>
+            )}
+
+            {cat.products.length > 0 && (
+              <ul className="space-y-3 mb-8">
+                {cat.products.map((p, i) => (
+                  <li
+                    key={p}
+                    className={`flex items-center gap-4 transition-all duration-500 ${visible ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-4"}`}
+                    style={{ transitionDelay: `${300 + i * 80}ms` }}
+                  >
+                    <span className="w-1.5 h-1.5 rounded-full bg-gurmix-green flex-shrink-0" />
+                    <span className={`text-base font-medium ${cat.accent ? "text-white/90" : "text-gurmix-dark"}`}>{p}</span>
+                  </li>
+                ))}
+              </ul>
+            )}
+
+            <button
+              onClick={() => document.getElementById("price")?.scrollIntoView({ behavior: "smooth" })}
+              className={`text-sm font-semibold tracking-wider px-7 py-3.5 transition-all hover:scale-105 ${
+                cat.accent
+                  ? "bg-gurmix-green text-white hover:bg-[#6aa030]"
+                  : "border-2 border-gurmix-green text-gurmix-green hover:bg-gurmix-green hover:text-white"
+              }`}
+            >
+              ЗАПРОСИТЬ ПРАЙС
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ─────────────── MAIN ─────────────── */
 export default function Index() {
   const [menuOpen, setMenuOpen] = useState(false);
-  const catalogSection = useInView();
-  const discountSection = useInView();
-  const advantageSection = useInView();
+  const [dropOpen, setDropOpen] = useState(false);
+  const heroSection = useInView(0.01);
+  const priceSection = useInView();
   const contactSection = useInView();
 
   const scrollTo = (id: string) => {
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
     setMenuOpen(false);
+    setDropOpen(false);
   };
 
   return (
@@ -77,24 +199,41 @@ export default function Index() {
       {/* ── HEADER ── */}
       <header className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-gray-100">
         <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-3">
+          <button onClick={() => scrollTo("hero")} className="flex items-center gap-3">
             <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-8 h-8">
               <polygon points="16,2 30,28 2,28" fill="#7DB53A" opacity="0.15"/>
               <polygon points="16,6 28,26 4,26" fill="#7DB53A" opacity="0.4"/>
               <polygon points="16,10 26,24 6,24" fill="#7DB53A"/>
             </svg>
             <span className="font-oswald text-xl font-bold tracking-wider text-gurmix-dark">
-              ГУРМИКС<sup className="text-xs font-montserrat font-normal">®</sup>
+              ГУРМИКС<sup className="text-[10px] font-montserrat font-normal ml-0.5">®</sup>
             </span>
-          </div>
+          </button>
 
           <nav className="hidden md:flex items-center gap-8">
-            {[["catalog","Каталог"],["discounts","Скидки"],["advantages","О нас"],["contacts","Контакты"]].map(([id, label]) => (
+            {NAV_ITEMS.map(({ id, label }) => (
               <button key={id} onClick={() => scrollTo(id)}
                 className="text-sm font-medium text-gurmix-gray hover:text-gurmix-green transition-colors tracking-wide">
                 {label}
               </button>
             ))}
+            <div className="relative">
+              <button
+                onClick={() => setDropOpen(!dropOpen)}
+                className="text-sm font-medium text-gurmix-gray hover:text-gurmix-green transition-colors tracking-wide flex items-center gap-1">
+                Разделы <Icon name="ChevronDown" size={14} />
+              </button>
+              {dropOpen && (
+                <div className="absolute top-full left-0 mt-2 w-60 bg-white border border-gray-100 shadow-xl z-50">
+                  {CATALOG.map((c) => (
+                    <button key={c.id} onClick={() => scrollTo(c.id)}
+                      className="block w-full text-left px-4 py-2.5 text-sm text-gurmix-gray hover:bg-gurmix-light hover:text-gurmix-green transition-colors">
+                      {c.title}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
           </nav>
 
           <div className="flex items-center gap-3">
@@ -109,15 +248,24 @@ export default function Index() {
         </div>
 
         {menuOpen && (
-          <div className="md:hidden bg-white border-t border-gray-100 px-6 py-4 flex flex-col gap-4">
-            {[["catalog","Каталог"],["discounts","Скидки"],["advantages","О нас"],["contacts","Контакты"]].map(([id, label]) => (
+          <div className="md:hidden bg-white border-t border-gray-100 px-6 py-4 flex flex-col gap-1 max-h-[80vh] overflow-y-auto">
+            {NAV_ITEMS.map(({ id, label }) => (
               <button key={id} onClick={() => scrollTo(id)}
-                className="text-left text-base font-medium text-gurmix-gray hover:text-gurmix-green transition-colors">
+                className="text-left text-base font-medium text-gurmix-gray hover:text-gurmix-green py-2 transition-colors">
                 {label}
               </button>
             ))}
+            <div className="border-t border-gray-100 mt-2 pt-3">
+              <p className="text-xs text-gurmix-gray uppercase tracking-widest mb-2 font-semibold">Разделы</p>
+              {CATALOG.map((c) => (
+                <button key={c.id} onClick={() => scrollTo(c.id)}
+                  className="text-left text-sm text-gurmix-gray hover:text-gurmix-green py-1.5 block w-full transition-colors">
+                  {c.title}
+                </button>
+              ))}
+            </div>
             <button onClick={() => scrollTo("price")}
-              className="bg-gurmix-green text-white text-sm font-semibold px-5 py-3 tracking-wide hover:bg-[#6aa030] transition-colors w-full text-center mt-2">
+              className="bg-gurmix-green text-white text-sm font-semibold px-5 py-3 tracking-wide hover:bg-[#6aa030] transition-colors w-full text-center mt-3">
               Запросить прайс
             </button>
           </div>
@@ -125,54 +273,57 @@ export default function Index() {
       </header>
 
       {/* ── HERO ── */}
-      <section className="relative min-h-screen flex items-center overflow-hidden pt-16">
-        <div className="absolute inset-0 flex">
-          <div className="w-1/2 bg-gurmix-dark relative overflow-hidden">
-            <img
-              src="https://cdn.poehali.dev/files/f9230d3a-676e-443e-938c-8209a44edb27.JPG"
-              alt="ГУРМИКС продукция"
-              className="absolute inset-0 w-full h-full object-cover opacity-60 scale-105"
-            />
-          </div>
-          <div className="w-1/2 bg-gurmix-green relative">
-            <div className="absolute inset-0 opacity-10"
-              style={{backgroundImage:"repeating-linear-gradient(45deg,transparent,transparent 20px,rgba(255,255,255,0.05) 20px,rgba(255,255,255,0.05) 40px)"}}>
-            </div>
-          </div>
+      <section id="hero" className="relative min-h-screen flex items-center overflow-hidden pt-16" ref={heroSection.ref}>
+        <div className="absolute inset-0">
+          <img
+            src="https://cdn.poehali.dev/projects/8b724216-7c50-4a02-97ca-5acd31a5a5d0/files/5e1ce3e7-e5ba-4fd5-8a75-cfd90fe6408c.jpg"
+            alt="ГУРМИКС"
+            className="w-full h-full object-cover opacity-40"
+          />
+          <div className="absolute inset-0 bg-gurmix-dark" style={{ opacity: 0.82 }} />
         </div>
+        <div className="absolute inset-0 bg-gradient-to-r from-gurmix-dark/60 via-transparent to-transparent" />
 
-        <div className="absolute inset-0" style={{background:"linear-gradient(105deg, rgba(26,26,26,0.6) 48%, transparent 58%)"}} />
-
-        <div className="relative z-10 max-w-7xl mx-auto px-6 w-full py-24">
+        <div className="relative z-10 max-w-7xl mx-auto px-6 w-full py-28">
           <div className="max-w-2xl">
-            <p className="text-gurmix-green font-oswald text-sm tracking-[0.3em] mb-4 animate-fade-in-up delay-100">
-              ГОТОВЫЕ РЕШЕНИЯ ДЛЯ ВАШЕГО БИЗНЕСА
+            <p className={`text-gurmix-green font-oswald text-sm tracking-[0.3em] mb-5 transition-all duration-700 ${heroSection.visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}>
+              ПРОФЕССИОНАЛЬНЫЕ ВКУСОВЫЕ РЕШЕНИЯ
             </p>
-            <h1 className="font-oswald text-5xl md:text-7xl font-bold text-white leading-tight mb-6 animate-fade-in-up delay-200">
-              МАРИНАДЫ.<br/>СПЕЦИИ.<br/>СОУСЫ.
+            <h1 className={`font-oswald text-6xl md:text-8xl font-bold text-white leading-[1.0] mb-6 transition-all duration-700 delay-100 ${heroSection.visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`}>
+              ГУР<span className="text-gurmix-green">МИКС</span><sup className="text-2xl font-montserrat font-light">®</sup>
             </h1>
-            <p className="text-white/80 text-lg font-light leading-relaxed mb-10 animate-fade-in-up delay-300 max-w-md">
-              Профессиональные продукты для ресторанов, кафе и производств. Оптовые поставки по всей России.
+            <p className={`text-white/70 text-lg font-light leading-relaxed mb-8 max-w-lg transition-all duration-700 delay-200 ${heroSection.visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`}>
+              Маринады, корейские заправки, соусы, гриль-приправы, коптильные ароматизаторы, бульоны и многое другое. Оптовые поставки по всей России.
             </p>
-            <div className="flex flex-wrap gap-4 animate-fade-in-up delay-400">
+
+            <div className={`flex flex-wrap gap-2 mb-10 transition-all duration-700 delay-300 ${heroSection.visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}>
+              {CATALOG.map((c) => (
+                <button key={c.id} onClick={() => scrollTo(c.id)}
+                  className="text-xs font-medium px-3 py-1.5 border border-white/25 text-white/70 hover:border-gurmix-green hover:text-gurmix-green transition-all">
+                  {c.title}
+                </button>
+              ))}
+            </div>
+
+            <div className={`flex flex-wrap gap-4 transition-all duration-700 delay-400 ${heroSection.visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}>
               <button onClick={() => scrollTo("catalog")}
                 className="bg-gurmix-green text-white font-semibold px-8 py-4 text-sm tracking-wider hover:bg-[#6aa030] transition-all hover:scale-105">
                 СМОТРЕТЬ КАТАЛОГ
               </button>
               <button onClick={() => scrollTo("price")}
-                className="border border-white/50 text-white font-semibold px-8 py-4 text-sm tracking-wider hover:bg-white/10 transition-all">
+                className="border border-white/40 text-white font-semibold px-8 py-4 text-sm tracking-wider hover:bg-white/10 transition-all">
                 ЗАПРОСИТЬ ПРАЙС
               </button>
             </div>
           </div>
         </div>
 
-        <div className="absolute bottom-0 left-0 right-0 bg-white/95 backdrop-blur-sm z-10">
-          <div className="max-w-7xl mx-auto px-6 py-5 flex flex-wrap justify-between gap-6">
-            {[["90+","Продуктов в линейке"],["15 лет","На рынке"],["500+","Клиентов по России"],["1 день","Минимальный срок отгрузки"]].map(([val, label]) => (
-              <div key={label} className="flex items-center gap-4">
+        <div className="absolute bottom-0 left-0 right-0 bg-white z-10">
+          <div className="max-w-7xl mx-auto px-6 py-4 flex flex-wrap justify-between gap-5">
+            {[["10+","Линеек продуктов"],["90+","Позиций"],["15 лет","На рынке"],["500+","Клиентов по России"]].map(([val, label]) => (
+              <div key={label} className="flex items-center gap-3">
                 <span className="font-oswald text-2xl font-bold text-gurmix-green">{val}</span>
-                <span className="text-xs text-gurmix-gray font-medium leading-tight max-w-[100px]">{label}</span>
+                <span className="text-xs text-gurmix-gray font-medium leading-tight max-w-[90px]">{label}</span>
               </div>
             ))}
           </div>
@@ -180,149 +331,29 @@ export default function Index() {
       </section>
 
       {/* ── CATALOG ── */}
-      <section id="catalog" className="py-24 bg-gurmix-light" ref={catalogSection.ref}>
-        <div className="max-w-7xl mx-auto px-6">
-          <div className={`mb-14 transition-all duration-700 ${catalogSection.visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>
-            <p className="text-gurmix-green font-oswald text-sm tracking-[0.3em] mb-3">АССОРТИМЕНТ</p>
-            <h2 className="font-oswald text-4xl md:text-5xl font-bold text-gurmix-dark">
-              Каталог <span className="green-underline">продукции</span>
-            </h2>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {CATEGORIES.map((cat, i) => (
-              <div key={cat.title}
-                className={`product-card bg-white overflow-hidden cursor-pointer group transition-all duration-700 ${catalogSection.visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"}`}
-                style={{ transitionDelay: `${i * 120}ms` }}>
-                <div className="relative h-56 overflow-hidden">
-                  <img src={cat.img} alt={cat.title}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
-                  {cat.tag && (
-                    <span className="absolute top-3 left-3 bg-gurmix-green text-white text-xs font-bold px-3 py-1 tracking-wider">
-                      {cat.tag}
-                    </span>
-                  )}
-                </div>
-                <div className="p-5">
-                  <h3 className="font-oswald text-xl font-semibold text-gurmix-dark mb-2">{cat.title}</h3>
-                  <p className="text-sm text-gurmix-gray leading-relaxed mb-4">{cat.desc}</p>
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs text-gurmix-green font-semibold">{cat.count}</span>
-                    <Icon name="ArrowRight" size={16} className="text-gurmix-green group-hover:translate-x-1 transition-transform" />
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          <div className={`mt-10 text-center transition-all duration-700 delay-500 ${catalogSection.visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}>
-            <button onClick={() => scrollTo("price")}
-              className="border-2 border-gurmix-green text-gurmix-green font-semibold px-8 py-3.5 text-sm tracking-wider hover:bg-gurmix-green hover:text-white transition-all">
-              ЗАПРОСИТЬ ПОЛНЫЙ КАТАЛОГ
-            </button>
-          </div>
-        </div>
-      </section>
-
-      {/* ── DISCOUNTS ── */}
-      <section id="discounts" className="py-24 bg-white" ref={discountSection.ref}>
-        <div className="max-w-7xl mx-auto px-6">
-          <div className={`mb-14 transition-all duration-700 ${discountSection.visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>
-            <p className="text-gurmix-green font-oswald text-sm tracking-[0.3em] mb-3">ВЫГОДА ДЛЯ БИЗНЕСА</p>
-            <h2 className="font-oswald text-4xl md:text-5xl font-bold text-gurmix-dark">
-              Оптовые <span className="green-underline">скидки</span>
-            </h2>
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <div className={`transition-all duration-700 delay-200 ${discountSection.visible ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-8"}`}>
-              <div className="border border-gray-100 overflow-hidden">
-                <div className="bg-gurmix-dark text-white px-6 py-4 flex justify-between">
-                  <span className="font-oswald text-sm tracking-wider">ОБЪЁМ ЗАКАЗА</span>
-                  <span className="font-oswald text-sm tracking-wider">СКИДКА</span>
-                </div>
-                {DISCOUNTS.map((d) => (
-                  <div key={d.range}
-                    className={`px-6 py-5 flex justify-between items-center border-b border-gray-100 last:border-0 ${d.dark ? "bg-gurmix-green" : "bg-white"}`}>
-                    <span className={`font-oswald text-xl font-semibold ${d.dark ? "text-white" : "text-gurmix-dark"}`}>{d.range}</span>
-                    <span className={`font-oswald text-3xl font-bold ${d.dark ? "text-white" : "text-gurmix-green"}`}>{d.discount}</span>
-                  </div>
-                ))}
-              </div>
-              <p className="text-xs text-gurmix-gray mt-4 leading-relaxed">
-                * Скидки суммируются с акционными предложениями. Уточняйте условия у менеджера.
-              </p>
-            </div>
-
-            <div className={`transition-all duration-700 delay-300 ${discountSection.visible ? "opacity-100 translate-x-0" : "opacity-0 translate-x-8"}`}>
-              <div className="space-y-6">
-                {[
-                  ["Гибкая система скидок","Скидки от объёма + сезонные акции и специальные условия для постоянных партнёров"],
-                  ["Рассрочка оплаты","Работаем с отсрочкой платежа для проверенных клиентов"],
-                  ["Индивидуальные рецептуры","Разработаем рецептуру специально под ваш бизнес или формат блюда"],
-                  ["Брендирование","Нанесение вашего логотипа на упаковку при заказе от 100 кг"],
-                ].map(([title, text]) => (
-                  <div key={title} className="flex gap-4">
-                    <div className="w-6 h-6 rounded-full bg-gurmix-green flex-shrink-0 mt-0.5 flex items-center justify-center">
-                      <Icon name="Check" size={13} className="text-white" />
-                    </div>
-                    <div>
-                      <p className="font-semibold text-gurmix-dark text-sm mb-1">{title}</p>
-                      <p className="text-sm text-gurmix-gray leading-relaxed">{text}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ── ADVANTAGES ── */}
-      <section id="advantages" className="py-24 bg-gurmix-dark" ref={advantageSection.ref}>
-        <div className="max-w-7xl mx-auto px-6">
-          <div className={`mb-14 transition-all duration-700 ${advantageSection.visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>
-            <p className="text-gurmix-green font-oswald text-sm tracking-[0.3em] mb-3">ПОЧЕМУ МЫ</p>
-            <h2 className="font-oswald text-4xl md:text-5xl font-bold text-white">
-              Наши <span className="green-underline">преимущества</span>
-            </h2>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            {ADVANTAGES.map((adv, i) => (
-              <div key={adv.title}
-                className={`transition-all duration-700 ${advantageSection.visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}
-                style={{ transitionDelay: `${i * 100}ms` }}>
-                <div className="w-12 h-12 border border-gurmix-green/40 flex items-center justify-center mb-5">
-                  <Icon name={adv.icon as "Factory"} size={22} className="text-gurmix-green" fallback="Star" />
-                </div>
-                <h3 className="font-oswald text-lg font-semibold text-white mb-3">{adv.title}</h3>
-                <p className="text-sm text-white/60 leading-relaxed">{adv.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      <div id="catalog" />
+      {CATALOG.map((cat, i) => (
+        <CatalogSection key={cat.id} cat={cat} index={i} />
+      ))}
 
       {/* ── PRICE REQUEST ── */}
-      <section id="price" className="py-24 bg-gurmix-green">
+      <section id="price" className="py-24 bg-gurmix-green" ref={priceSection.ref}>
         <div className="max-w-3xl mx-auto px-6 text-center">
-          <p className="font-oswald text-sm tracking-[0.3em] text-white/70 mb-4">ВАША ВЫГОДА</p>
-          <h2 className="font-oswald text-4xl md:text-5xl font-bold text-white mb-6">
+          <p className="font-oswald text-sm tracking-[0.3em] text-white/60 mb-4">ДЛЯ ПАРТНЁРОВ</p>
+          <h2 className={`font-oswald text-4xl md:text-5xl font-bold text-white mb-6 transition-all duration-700 ${priceSection.visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`}>
             Получите актуальный<br/>прайс-лист
           </h2>
           <p className="text-white/80 text-base leading-relaxed mb-10 max-w-xl mx-auto">
-            Отправьте заявку — и мы пришлём полный прайс с оптовыми ценами и специальными условиями для вашего бизнеса.
+            Отправьте заявку — пришлём полный прайс с оптовыми ценами и специальными условиями для вашего бизнеса.
           </p>
-          <div className="bg-white p-8 max-w-lg mx-auto text-left">
+          <div className={`bg-white p-8 max-w-lg mx-auto text-left transition-all duration-700 delay-200 ${priceSection.visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>
             <div className="space-y-4">
               <input type="text" placeholder="Ваше имя"
-                className="w-full border border-gray-200 px-4 py-3.5 text-sm text-gurmix-dark placeholder-gray-400 outline-none focus:border-gurmix-green transition-colors font-montserrat" />
+                className="w-full border border-gray-200 px-4 py-3.5 text-sm text-gurmix-dark placeholder-gray-400 outline-none focus:border-gurmix-green transition-colors" />
               <input type="tel" placeholder="Номер телефона"
-                className="w-full border border-gray-200 px-4 py-3.5 text-sm text-gurmix-dark placeholder-gray-400 outline-none focus:border-gurmix-green transition-colors font-montserrat" />
+                className="w-full border border-gray-200 px-4 py-3.5 text-sm text-gurmix-dark placeholder-gray-400 outline-none focus:border-gurmix-green transition-colors" />
               <input type="text" placeholder="Название компании (необязательно)"
-                className="w-full border border-gray-200 px-4 py-3.5 text-sm text-gurmix-dark placeholder-gray-400 outline-none focus:border-gurmix-green transition-colors font-montserrat" />
+                className="w-full border border-gray-200 px-4 py-3.5 text-sm text-gurmix-dark placeholder-gray-400 outline-none focus:border-gurmix-green transition-colors" />
               <button className="w-full bg-gurmix-dark text-white font-semibold py-4 text-sm tracking-wider hover:bg-[#2a2a2a] transition-colors">
                 ОТПРАВИТЬ ЗАЯВКУ
               </button>
@@ -411,7 +442,7 @@ export default function Index() {
               <polygon points="16,10 26,24 6,24" fill="#7DB53A"/>
             </svg>
             <span className="font-oswald text-white tracking-widest text-sm">
-              ГУРМИКС<sup className="text-xs font-montserrat font-normal">®</sup>
+              ГУРМИКС<sup className="text-[9px] font-montserrat font-normal">®</sup>
             </span>
           </div>
           <p className="text-white/40 text-xs text-center">© 2024 ООО «ГУРМИКС». Все права защищены.</p>
