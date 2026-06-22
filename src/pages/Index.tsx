@@ -8,31 +8,35 @@ const CATALOG: {
   title: string;
   desc?: string;
   img: string;
-  products: string[];
+  products: { name: string; desc?: string }[];
   accent?: boolean;
 }[] = [
   {
     id: "marinades",
     title: "Маринады",
     img: "https://cdn.poehali.dev/projects/8b724216-7c50-4a02-97ca-5acd31a5a5d0/files/2f5edc72-9bc7-409c-b7ff-3262703cc264.jpg",
-    products: ["Маринад Люкс", "Маринад Универсал", "Маринад Экспресс"],
+    products: [
+      { name: "Маринад Люкс", desc: "Яркие маринады на основе растительного масла и комплекса специй. Придают полуфабрикатам красивый глянцевый вид." },
+      { name: "Маринад Универсал", desc: "Тщательно разработанные смеси ингредиентов, созданные для придания продукту неповторимого вкуса, аромата и сочности, а также привлекательного внешнего вида. Гармоничное сочетание растительных масел, кислот, соли, сахара и богатой палитры специй и трав." },
+      { name: "Маринад Экспресс", desc: "Готовые к использованию смеси, разработанные для максимально ускоренного процесса маринования мяса, птицы, рыбы и овощей, сохраняя при этом насыщенный вкус и аромат." },
+    ],
   },
   {
     id: "korean",
     title: "Корейские заправки",
     img: "https://cdn.poehali.dev/projects/8b724216-7c50-4a02-97ca-5acd31a5a5d0/files/0e203b1d-2a2d-4743-92b4-2636485e75a1.jpg",
     products: [
-      "Корейская заправка для моркови",
-      "Корейская заправка для спаржи",
-      "Корейская заправка для фунчозы",
-      "Корейская заправка для хе",
+      { name: "Корейская заправка для моркови" },
+      { name: "Корейская заправка для спаржи" },
+      { name: "Корейская заправка для фунчозы" },
+      { name: "Корейская заправка для хе" },
     ],
   },
   {
     id: "sauces",
     title: "Соусы",
     img: "https://cdn.poehali.dev/projects/8b724216-7c50-4a02-97ca-5acd31a5a5d0/files/e6a870ad-2e50-48ba-ae6b-407fa6fe64c7.jpg",
-    products: ["Европейские", "FoodService", "Азиатские"],
+    products: [{ name: "Европейские" }, { name: "FoodService" }, { name: "Азиатские" }],
   },
   {
     id: "grill",
@@ -40,9 +44,9 @@ const CATALOG: {
     desc: "Тщательно разработанные композиции специй, трав и пряностей, созданные, чтобы преобразить вкус и подготовить продукт перед дальнейшей тепловой обработкой.",
     img: "https://cdn.poehali.dev/projects/8b724216-7c50-4a02-97ca-5acd31a5a5d0/files/84a860e5-7779-47e9-b6c5-13ee2190b55c.jpg",
     products: [
-      "Гриль-приправа Грузинская",
-      "Гриль-приправа для курицы",
-      "Гриль-приправа Классическая",
+      { name: "Гриль-приправа Грузинская" },
+      { name: "Гриль-приправа для курицы" },
+      { name: "Гриль-приправа Классическая" },
     ],
     accent: true,
   },
@@ -51,8 +55,8 @@ const CATALOG: {
     title: "Коптильные ароматизаторы",
     img: "https://cdn.poehali.dev/projects/8b724216-7c50-4a02-97ca-5acd31a5a5d0/files/4e935373-b16f-4ce0-8007-0ca93cd3b3c3.jpg",
     products: [
-      "Ароматизатор коптильный Гурмикс",
-      "Ароматизатор коптильный Деликарома",
+      { name: "Ароматизатор коптильный Гурмикс" },
+      { name: "Ароматизатор коптильный Деликарома" },
     ],
   },
   {
@@ -61,10 +65,10 @@ const CATALOG: {
     desc: "Кулинарные решения для быстрого приготовления популярных супов азиатской кухни. Комплексные смеси ингредиентов со сбалансированным набором аутентичных специй.",
     img: "https://cdn.poehali.dev/projects/8b724216-7c50-4a02-97ca-5acd31a5a5d0/files/ebec5ad9-de64-4586-bcce-fe7f4a6a9172.jpg",
     products: [
-      "Основа для супа Рамен мисо",
-      "Основа для супа Том Кха",
-      "Основа для супа Том Ям",
-      "Основа для супа Фо Бо",
+      { name: "Основа для супа Рамен мисо" },
+      { name: "Основа для супа Том Кха" },
+      { name: "Основа для супа Том Ям" },
+      { name: "Основа для супа Фо Бо" },
     ],
     accent: true,
   },
@@ -73,13 +77,13 @@ const CATALOG: {
     title: "Бульоны",
     desc: "Концентрированные экстракты из говядины и курицы. Сохраняют богатый, естественный вкус домашнего бульона. Небольшое количество продукта мгновенно превращается в ароматный бульон для супов, соусов и ризотто.",
     img: "https://cdn.poehali.dev/projects/8b724216-7c50-4a02-97ca-5acd31a5a5d0/files/5cb9232d-de9a-4745-86d6-a1fdcd8a718d.jpg",
-    products: ["Бульон говяжий", "Бульон куриный"],
+    products: [{ name: "Бульон говяжий" }, { name: "Бульон куриный" }],
   },
   {
     id: "breading",
     title: "Панировочные смеси",
     img: "https://cdn.poehali.dev/projects/8b724216-7c50-4a02-97ca-5acd31a5a5d0/files/a179238b-467e-4fcf-a847-c92dfb1468eb.jpg",
-    products: ["Панировка Нежная", "Панировка Острая", "Панировка Оригинальная"],
+    products: [{ name: "Панировка Нежная" }, { name: "Панировка Острая" }, { name: "Панировка Оригинальная" }],
   },
   {
     id: "concentrates",
@@ -148,15 +152,20 @@ function CatalogSection({ cat, index }: { cat: typeof CATALOG[0]; index: number 
             )}
 
             {cat.products.length > 0 && (
-              <ul className="space-y-3 mb-8">
+              <ul className="space-y-4 mb-8">
                 {cat.products.map((p, i) => (
                   <li
-                    key={p}
-                    className={`flex items-center gap-4 transition-all duration-500 ${visible ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-4"}`}
+                    key={p.name}
+                    className={`flex items-start gap-4 transition-all duration-500 ${visible ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-4"}`}
                     style={{ transitionDelay: `${300 + i * 80}ms` }}
                   >
-                    <span className="w-1.5 h-1.5 rounded-full bg-gurmix-green flex-shrink-0" />
-                    <span className={`text-base font-medium ${cat.accent ? "text-white/90" : "text-gurmix-dark"}`}>{p}</span>
+                    <span className="w-1.5 h-1.5 rounded-full bg-gurmix-green flex-shrink-0 mt-2" />
+                    <div>
+                      <span className={`text-base font-semibold ${cat.accent ? "text-white/90" : "text-gurmix-dark"}`}>{p.name}</span>
+                      {p.desc && (
+                        <p className={`text-sm mt-0.5 leading-relaxed ${cat.accent ? "text-white/55" : "text-gurmix-gray"}`}>{p.desc}</p>
+                      )}
+                    </div>
                   </li>
                 ))}
               </ul>
